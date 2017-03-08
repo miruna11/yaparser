@@ -1,0 +1,83 @@
+﻿
+	
+	<?php
+mysql_connect("localhost", "root", "")//параметры в скобках ("хост", "имя пользователя", "пароль")
+or die("<p>Ошибка подключения к базе данных! " . mysql_error() . "</p>");
+
+mysql_select_db("pars")//параметр в скобках ("имя базы, с которой соединяемся")
+ or die("<p>Ошибка выбора базы данных! ". mysql_error() . "</p>");
+?>
+
+<?php
+//	require_once 'connect.php';
+
+//подключили библиотеку
+require_once 'simple_html_dom.php';
+$query = $_POST['query']; 
+echo '<p>ваш запрос: <b>'.$query.'</b></p>';
+//скачали страничку
+$html = file_get_html('https://www.yandex.ru/search/?text='.$query.'&lr=50');
+$p = 10; 
+$i=0;
+
+//ищем картинку с капчей
+
+$img_cap = $html->find('img');
+echo '<img src='.$img_cap[1]->src.'><br>';
+
+//собираем ссылки
+while($i!=$p){ 
+$a_links = $html->find('a[class=organic__url]');
+//$query_bd=('INSERT INTO urls VALUES ('$a_links')');
+
+$a_l = $a_links[ $i ];
+//$insert_sql = "INSERT INTO urls (a_links)" ."VALUES('{$a_l}');";
+//mysql_query($insert_sql);
+echo $a_l->href.'<br>';
+$i++;
+} 
+
+$html->clear(); 
+unset($html);  
+?> 
+
+</?php
+//	require_once 'connect.php';
+
+//подключили библиотеку
+require_once 'simple_html_dom.php';
+
+$query = $_POST['query']; 
+
+$arr = explode( "\n", $query);
+print_r($arr);
+$result = count($arr);
+echo $result;
+$p = 10; 
+$i=0;
+
+for ($i=0; $i <$result; $i++){
+	echo '<p>'.$arr[$i].'</p>';
+}
+
+echo '<p>ваш запрос: <b>'.$query.'</b></p>';
+//скачали страничку
+$html = file_get_html('https://www.yandex.ru/search/?text='.$query.'&lr=50');
+
+
+//ищем картинку с капчей
+
+$img_cap = $html->find('img');
+echo '<img src='.$img_cap[1]->src.'><br>';
+
+//собираем ссылки1
+	while($i!=$p){ 
+		$a_links = $html->find('a[class=organic__url]');
+		$a_l = $a_links[ $i ];
+		echo $a_l->href.'<br>';
+		$i++;
+	} 
+
+$html->clear(); 
+unset($html);  
+?> 
